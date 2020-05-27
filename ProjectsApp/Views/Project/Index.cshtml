@@ -1,0 +1,75 @@
+﻿<br />
+<div ng-controller="ProjectApiController">
+    <div class="row">
+        <div class="col-md-3">
+            <input type="text" ng-model="searchFilter" class="form-control" placeholder="Search project..." />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <input type="text" class="form-control" ng-model="newProject.Name" placeholder="Enter name..." />
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control" ng-model="newProject.Price" placeholder="Enter price..." />
+        </div>
+        <div class="col-md-3">
+            <input type="date" class="form-control" ng-model="newProject.ScheduledDate" />
+        </div>
+        <div class="col-md-3">
+            <button type="button" class="btn btn-sm btn-success" ng-click="create()">Add</button>
+        </div>
+    </div>
+    <br />
+    <table class="table">
+        <tr>
+            <th class="col-md-3">Name</th>
+            <th class="col-md-3">Price</th>
+            <th class="col-md-3">Date</th>
+            <th class="col-md-3">Actions</th>
+        </tr>
+        <tr ng-repeat="p in projects | filter:searchFilter" ng-include="getTemplate(p)">
+        </tr>
+    </table>
+    <div class="loader" ng-if="loading"></div>
+    <div class="text-center" ng-if="projects.length == 0">No projects</div>
+
+    <script type="text/ng-template" id="display">
+        <td>{{p.Name}}</td>
+        <td>${{p.Price | number}}</td>
+        <td>{{p.ScheduledDate | date: 'MM/dd/yyyy' }}</td>
+        <td>
+            <button type="button" class="btn btn-sm btn-primary" ng-click="edit(p)">Edit</button>
+            <button type="button" class="btn btn-sm btn-primary" ng-click="showDetails(p)">Details</button>
+            <button type="button" class="btn btn-sm btn-danger" ng-click="delete(p.Id)">Delete</button>
+        </td>
+    </script>
+    <script type="text/ng-template" id="edit">
+        <td><input type="text" class="form-control" ng-model="projectSelected.Name" /></td>
+        <td><input type="text" class="form-control" ng-model="projectSelected.Price" /></td>
+        <td><input type="date" class="form-control" ng-model="projectSelected.ScheduledDate" /></td>
+        <td>
+            <button type="button" class="btn btn-sm btn-success" ng-click="save($index)">Save</button>
+            <button type="button" class="btn btn-sm btn-cancel" ng-click="reset()">Cancel</button>
+        </td>
+    </script>
+
+    <script type="text/ng-template" id="ProjectDetailsModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Project Details</h3>
+        </div>
+        <div class="modal-body">
+            <dl>
+                <dt>Name</dt>
+                <dd class="project-details-dd">{{projectDetails.Name}}</dd>
+                <dt>Price</dt>
+                <dd class="project-details-dd">{{projectDetails.Price}}</dd>
+                <dt>Scheduled Date</dt>
+                <dd class="project-details-dd">{{projectDetails.ScheduledDate | date: 'MM/dd/yyyy'}}</dd>
+            </dl>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="$close()">Close</button>
+        </div>
+    </script>
+</div>
